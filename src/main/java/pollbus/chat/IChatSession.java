@@ -1,4 +1,4 @@
-package chat;
+package pollbus.chat;
 
 import java.util.List;
 

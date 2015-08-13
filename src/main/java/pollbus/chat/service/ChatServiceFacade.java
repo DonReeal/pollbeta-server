@@ -1,12 +1,12 @@
-package chat;
+package pollbus.chat.service;
 
 import io.baratine.core.OnLookup;
 import io.baratine.core.Result;
 import io.baratine.core.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import pollbus.chat.IChannel;
 /**
  * All THE baratine API goes here ... basically its equivalent to a java ee Beanimpl
  * @author blehmann
@@ -17,15 +17,15 @@ public class ChatServiceFacade {
 	
 	@OnLookup
 	public ChannelFacade onLookup(String ref) {
-		Channel ch = new Channel();
+		ChannelDt ch = new ChannelDt();
 		ch.setId(ref.substring(1));
 		return new ChannelFacade(ch);
 	}
 
 	// that stuff is being handed out by looking up under ///chat/something
 	static class ChannelFacade implements IChannel {
-		private final Channel _channel;
-		public ChannelFacade(Channel channel) {
+		private final ChannelDt _channel;
+		public ChannelFacade(ChannelDt channel) {
 			_channel = channel;
 		}
 		/**
@@ -50,7 +50,7 @@ public class ChatServiceFacade {
 		 * http://localhost:8086/s/pod/chat/123 
 		 */
 		@Override
-		public void get(Result<Channel> result) {
+		public void get(Result<ChannelDt> result) {
 			result.complete(_channel);
 		}
 	}

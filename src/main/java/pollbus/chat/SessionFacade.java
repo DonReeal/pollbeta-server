@@ -1,4 +1,4 @@
-package chat;
+package pollbus.chat;
 
 import io.baratine.core.Result;
 import io.baratine.core.Service;
