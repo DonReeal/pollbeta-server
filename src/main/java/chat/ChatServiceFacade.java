@@ -5,6 +5,7 @@ import io.baratine.core.Result;
 import io.baratine.core.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 /**
  * All THE baratine API goes here ... basically its equivalent to a java ee Beanimpl
@@ -40,7 +41,7 @@ public class ChatServiceFacade {
 		 * @param result
 		 */
 		@Override
-		public void getUsers(Result<String[]> result) {
+		public void getUsers(Result<List<String>> result) {
 			result.complete(_channel.getUsers());
 		}
 		

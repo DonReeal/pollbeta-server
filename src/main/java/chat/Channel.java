@@ -1,6 +1,8 @@
 package chat;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Channel {
@@ -25,7 +27,7 @@ public class Channel {
 		userNames.remove(userName);
 	}
 
-	public String[] getUsers() {
-		return userNames.toArray(new String[userNames.size()]);	
+	public List<String> getUsers() {
+		return new ArrayList<String>(userNames);
 	}
 }

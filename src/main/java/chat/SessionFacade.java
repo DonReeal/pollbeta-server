@@ -22,7 +22,7 @@ public class SessionFacade implements IChatSession {
 	 * http://localhost:8086/s/pod/chat-session?m=connect
 	 */
 	@Override
-	public void connect(Result<String> sessionId){
+	public void connect(Result<String> sessionId) {
 		sessionId.complete(_sessionId);
 	}
 	
