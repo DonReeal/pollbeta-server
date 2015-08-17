@@ -1,5 +1,6 @@
 package pollbus.cchat.service;
 
+import io.baratine.core.OnLookup;
 import io.baratine.core.Result;
 import io.baratine.core.Service;
 import io.baratine.core.ServiceManager;
@@ -13,8 +14,10 @@ import java.util.Map;
 
 import pollbus.cchat.IChannel;
 import pollbus.cchat.IChatSession;
-import pollbus.session.ILoginService;
-import pollbus.session.user.UserDt;
+import pollbus.session.api.IPollbusSession;
+import pollbus.session.login.ILoginService;
+import pollbus.session.login.LoginData;
+import pollbus.session.pub.PollbusSessionFacade;
 /**
  * User visible facade to all channel-chat services.
  * 
@@ -24,39 +27,25 @@ import pollbus.session.user.UserDt;
 @Service("session:///chat-session")
 public class CChatSessionFacadeBean implements IChatSession {
 	
-	static enum State {
-		ANNONYMOUS, LOGGIN_IN, ONLINE;
-	}
-	
-	private UserDt _user;
-	private ILoginService _loginService;
-	
-	private State _state;
-	
-	@SessionId String _sessionId;
 	private Map<String, IChannel> _channels = new HashMap<>();
 	
+	@SessionId
+	private String _sessionId;
+	private IPollbusSession _pollbusSession;
 	
-	public void get(Result<String> sessionId){
-		sessionId.complete(_sessionId);
+	
+	
+	@OnLookup
+	public void onLookup() {
+		_pollbusSession = ServiceManager.getCurrent().lookup("/pollsession/" + _sessionId).as(IPollbusSession.class);
 	}
+	
 	/**
 	 * http://localhost:8086/s/pod/chat-session?m=connect
 	 */
 	@Override
-	public void connect(Result<String> sessionId) {		
-		switch (_state) {
-			case ANNONYMOUS: doConnect();
-			case LOGGIN_IN: sessionId.fail(new IllegalStateException("cant connect while connecting!"));
-			case ONLINE: sessionId.complete(_sessionId);
-		}
-		sessionId.complete(_sessionId);
-	}
-	
-	
-	private void doConnect() {
-		_state = State.LOGGIN_IN;
-		
+	public void connect(Result<String> sessionId) {	
+		// _pollbusSession.login(login, password);
 	}
 
 
@@ -73,24 +62,20 @@ public class CChatSessionFacadeBean implements IChatSession {
 	 * http://localhost:8086/s/pod/chat-session?m=joinChannel&p0=123
 	 */
 	@Override
-	public void joinChannel(String channelId, Result<Boolean> result){
+	public void joinChannel(String channelId, Result<Boolean> channelConnection) {
 		
 		ServiceRef found = ServiceManager.getCurrent().lookup("public:///chat/" + channelId);
 		
 		if(found != null) {
 			IChannel ch = found.as(IChannel.class);
-			ch.connect(_sessionId, connected-> {
-				
-				if(connected == true)
-					_channels.put(channelId, ch);
-						
-				result.complete(connected);		
-			});
+			_pollbusSession.getUserName(userKey -> 
+				ch.connect(userKey, channelConnection)
+			);
 		}
-		
+							
 		else {
-			result.fail(new IllegalArgumentException("channel not found"));
+			channelConnection.fail(new IllegalArgumentException("channel not found"));
 		}
 	}
-	
 }
+	

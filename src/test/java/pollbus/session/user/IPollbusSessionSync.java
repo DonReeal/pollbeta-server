@@ -1,6 +1,7 @@
 package pollbus.session.user;
 
-import pollbus.session.user.IPollbusSession;
+import pollbus.base.jamp.Ok;
+import pollbus.session.api.IPollbusSession;
 
 public interface IPollbusSessionSync extends IPollbusSession {
 
@@ -8,8 +9,10 @@ public interface IPollbusSessionSync extends IPollbusSession {
 
 	public String getSessionKey();
 
-	public String getUserKey();
+	public String getUserName();
 
-	public Void setProperty(String key, String value);
+	public Ok setProperty(String key, String value);
+
+	public boolean login(String login, String password);
 
 }
