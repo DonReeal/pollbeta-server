@@ -26,7 +26,7 @@ public class PollbusSessionFactory {
 		} 
 		
 		else {
-
+			
 			PollbusSessionImpl childSession = new PollbusSessionImpl(
 					sessionKey, ServiceManager.getCurrent()
 							.lookup("/session-svc/login")

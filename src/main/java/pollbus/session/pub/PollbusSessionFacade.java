@@ -10,7 +10,8 @@ import javax.naming.ConfigurationException;
 
 import pollbus.base.jamp.Ok;
 import pollbus.session.api.IPollbusSession;
-import pollbus.session.api.SessionState;
+import pollbus.session.api.SessionStatusDt;
+import pollbus.session.impl.SessionState;
 
 
 /**
@@ -32,6 +33,7 @@ public class PollbusSessionFacade implements IPollbusSession  {
 	// Hooking in on Baratine interal session
 	@SessionId
 	private String _sessionId;
+	
 	private IPollbusSession _pollbusSession;
 	
 	
@@ -57,7 +59,9 @@ public class PollbusSessionFacade implements IPollbusSession  {
 	
 	// ==============================================================
 	/** http://localhost:8086/s/pod/login-session */
-	public void get(Result<PollbusSessionFacade> sessionFacade) {sessionFacade.complete(this);} 
+	public void get(Result<SessionStatusDt> statusResult) {
+		_pollbusSession.get(statusResult);
+	} 
 	// ==============================================================
 	
 	
@@ -100,13 +104,6 @@ public class PollbusSessionFacade implements IPollbusSession  {
 	@Override
 	public void setProperty(String key, String value, Result<Ok> isSet) { // ugly i get 
 		_pollbusSession.setProperty(key, value, isSet);
-	}
-	
-	/** http://localhost:8086/s/pod/login-session?m=getSessionState */
-	@Override
-	public void getSessionState(Result<SessionState> result) {
-		_pollbusSession.getSessionState(result);
-		
 	}
 
 }

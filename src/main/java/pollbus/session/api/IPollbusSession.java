@@ -1,15 +1,14 @@
 package pollbus.session.api;
 
-import pollbus.base.jamp.Ok;
-
 import io.baratine.core.Result;
+import pollbus.base.jamp.Ok;
 
 public interface IPollbusSession {
 
 	void login(String login, String password, Result<Boolean> result);
 	void logoff(Result<Void> loggedOff);
 	
-	void getSessionState(Result<SessionState> result);
+	void get(Result<SessionStatusDt> result);
 	void getSessionKey(Result<String> sessionKey);
 	void getUserName(Result<String> userKey);
 	void getProperty(String key, Result<String> value);

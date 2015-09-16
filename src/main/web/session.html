@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Pollbus-Session</title>
+
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.7/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.7/angular-animate.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.7/angular-route.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.7/angular-resource.js"></script>
+  
+  <script src="baratine-js.js"></script>
+
+  <!-- INLINE SCRIPT FOR SESSION DEMO -->
+  <script>
+    var sessionApp = angular.module("sessionApp", []);
+
+    sessionApp.controller("clientController", function($scope) {
+    });
+
+    // applying the controller for session functionality
+    sessionApp.controller("pollsessionController", function ($scope, pollsessionService){
+      // ''' this way the controller exposes the serive directly ... hmmm '''
+      // really? well for now its just passing out this service - being directly called from a Template (HTML)
+      $scope.title = "> Pollbus-Session Demo";
+      $scope.pollsessionService = pollsessionService;
+      
+      $scope.ping = function() {
+        pollsessionService.ping();
+      }
+
+       $scope.createUser = function () {
+        $scope.client.query("/auction-session", "createUser",
+          [$scope.userName, $scope.userPassword],
+          $scope.onUserCreate
+        );
+      };
+
+      $scope.login = function() {
+        $scope.client
+        var promise = pollsessionService.login();
+        promise.success()
+      }
+
+    });
+
+    // do the session calls here ...
+    // the controller must handle the pomises returned by this factory ...
+    sessionApp.factory('pollsessionService', function() {
+
+
+      var url = "ws://" + "localhost:8086/" + "s/pod";
+      $scope.client = new Jamp.BaratineClient(url);
+      $scope.client.onSession = function () {
+          console.log("WS-Session alive!");
+      };
+
+      var secret = "| -- SERVICES IMMUTABLE SECRET -- |";
+      function doPing() {
+        console.log(secret + ": PINGPING!");
+      }
+      function doPong() {
+        console.log(secret + ": PONGPONG!");
+      }
+
+      // API of this factory being returned ..
+      var api = {
+        hello: "hello from returned api ...",
+        ping: function() {
+          doPing();
+        },
+        pong: function() {
+          doPong();
+        }
+      };
+      return api;
+    });
+
+  </script>
+
+</head>
+
+<body ng-app="sessionApp">
+
+
+  <div ng-controller="pollsessionController">
+  <!-- all of the above only accessible here -->
+    
+
+    <div>////////// pollsessionControllers part ////////////////////////////////////////////////////////////////////////////////////////</div>
+
+    <h1> {{ title }} </h1>
+
+    <div> {{ userName }} </div>
+    <div> {{ userPassword }} </div>
+
+    <div> {{ pollsessionService.hello }} </div>
+    <div> {{ pollsessionService.pong }} </div>
+    
+    <form ng-class="userForm" role="form">
+      <div class="form-group">
+        <input type="text" name="userName" ng-model="userName" class="form-control" id="user"
+               placeholder="Enter user name">
+      </div>
+      
+      <div class="form-group">
+        <input ng-model="userPassword" type="password" class="form-control"
+               id="password" placeholder="Password">
+      </div>
+      
+      <button type="submit" ng-class="btnUserLogin"
+              ng-click="ping()">Sign in
+      </button>
+      
+      <button type="submit" class="btn btn-default"
+              ng-click="logout()" ng-disabled="! user ">
+        Logout
+      </button>
+    </form>
+    <!-- -->
+    <div>////////// pollsessionControllers part ////////////////////////////////////////////////////////////////////////////////////////</div>
+  </div> 
+
+
+  <!-- IMPORTS-->
+  <!-- modules -->
+  <!-- <script src="session.js"></script> -->
+  <!-- controllers -->
+  <!-- <script src="chatController.js"></script> -->
+
+  <!-- SERVICES -->
+  <!-- <script src="chatService.js"></script> -->
+
+  
+</body>
+
+
+</html>
+

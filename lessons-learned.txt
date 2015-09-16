@@ -1,0 +1,6 @@
+
+
+LEARNINGS:
+
+
+Annotating Interfaces as @Service will break Deployment with a cryptic NullpointerException "Candiproducer etc"
