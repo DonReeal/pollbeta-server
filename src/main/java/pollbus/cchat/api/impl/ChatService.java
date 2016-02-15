@@ -1,10 +1,8 @@
 package pollbus.cchat.api.impl;
 
-import static java.util.Objects.requireNonNull;
-import io.baratine.core.Modify;
+import static pollbus.base.util.Preconditions.requireNotNull;
 import io.baratine.core.OnActive;
 import io.baratine.core.OnLookup;
-import io.baratine.core.OnSave;
 import io.baratine.core.Result;
 import io.baratine.core.Service;
 import io.baratine.core.ServiceManager;
@@ -14,16 +12,15 @@ import java.util.List;
 
 import javax.naming.ConfigurationException;
 
-import org.omg.CORBA._PolicyStub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pollbus.base.jamp.AppException;
 import pollbus.cchat.api.IChannel;
 import pollbus.cchat.api.IChannelEvents;
 import pollbus.cchat.pub.ChannelDt;
 /**
- * All THE baratine API goes here ... basically its equivalent to a java ee Beanimpl
+ * Can all baratine API be wrapped here?
+ * 
  * @author blehmann
  *
  */
@@ -37,25 +34,24 @@ public class ChatService {
 		return new ChannelFacade(ch);
 	}
 
-	// that stuff is being handed out by looking up under ///chat/something
-	
-	// publisher ...
+	/**
+	 * 
+	 * That stuff is being handed out by looking up under ///chat/something
+	 * @author blehmann
+	 *
+	 */
 	static class ChannelFacade implements IChannel {
-		
 		private final Logger logger = LoggerFactory.getLogger(ChannelFacade.class.getName());
 		
-		
-		Long messageCount = Long.valueOf(0);
-		
-		private final ChannelDt _channel;
+		Long messageCount = Long.valueOf(0);		
+		private final ChannelDt _channel;		
 		
 		public ChannelFacade(ChannelDt channel) {
 			_channel = channel;
-		}
+		}		
 		
 		private IChannelEvents _eventsPublisher;
 		private ServiceRef _eventsBindingRef;
-		
 		
 		@OnActive
 		public void onActive(Result<Boolean> finishedResult){
@@ -69,7 +65,7 @@ public class ChatService {
 			}
 			
 			else
-				finishedResult.complete(true);
+				finishedResult.complete(true);	
 			
 			logger.info(">>>>>> onActive! >>>>>>");
 		}
@@ -80,7 +76,7 @@ public class ChatService {
 		 */
 		@Override
 		public void connect(String userName, Result<Boolean> success) {
-			requireNonNull(userName);
+			requireNotNull(userName);
 			
 			if(_channel.getUsers().contains(userName)) {
 				success.complete(false);
@@ -94,8 +90,8 @@ public class ChatService {
 		}
 		
 		@Override
-		public void disconnect(String userName, io.baratine.core.Result<Void> success) {
-			requireNonNull(userName);
+		public void disconnect(String userName, Result<Void> success) {
+			requireNotNull(userName);
 			_channel.removeUser(userName);
 			_eventsPublisher.onUpdate(_channel);
 			success.complete(null);

@@ -31,7 +31,30 @@
 			<version>0.10.0</version>
 			<scope>compile</scope>
 		</dependency>
-
+		<!-- <dependency>
+			<groupId>io.baratine</groupId>
+			<artifactId>baratine-js</artifactId>
+			<version>0.10.0</version>
+		</dependency> -->
+		
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.7</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.7</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		
+		
+		
+		<!-- T E S T  -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -115,10 +138,48 @@
 						</executions>
 					</plugin>
 				</plugins>
+			</build>
+		</profile>
+		
+		<profile>
+			<id>run</id>
+			<properties>
+				<baratine.home.dir>C:\.baratine\baratine-0.10.0</baratine.home.dir>
+			</properties>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+					</plugin>
+
+					<plugin>
+						<groupId>io.baratine</groupId>
+						<artifactId>baratine-plugin</artifactId>
+						<configuration>
+							<external>true</external>
+							<host>localhost</host>
+							<port>8086</port>
+							<homeDir>/.baratine/baratine-0.10.0</homeDir>
+							<workDir>/tmp/chat-develop</workDir>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal> <!-- in a deploy profile you could run:  <goal>deploy</goal> -->
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
 
 			</build>
 		</profile>
-
+		
 	</profiles>
 
 

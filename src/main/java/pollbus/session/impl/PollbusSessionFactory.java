@@ -23,7 +23,7 @@ public class PollbusSessionFactory {
 
 		if (_managedRefs.containsKey(sessionKey)) {
 			return _managedRefs.get(sessionKey).as(IPollbusSession.class);
-		} 
+		}
 		
 		else {
 			

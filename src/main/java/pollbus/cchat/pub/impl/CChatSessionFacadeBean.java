@@ -3,11 +3,14 @@ package pollbus.cchat.pub.impl;
 import static pollbus.base.util.Preconditions.requireNotNull;
 import io.baratine.core.CancelHandle;
 import io.baratine.core.OnActive;
+import io.baratine.core.OnDestroy;
 import io.baratine.core.Result;
 import io.baratine.core.Service;
 import io.baratine.core.ServiceManager;
 import io.baratine.core.ServiceRef;
 import io.baratine.core.SessionId;
+
+
 
 
 import java.util.ArrayList;
@@ -16,11 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import pollbus.base.jamp.AppException;
+
+
+import pollbus.base.AppException;
 import pollbus.cchat.api.IChannel;
 import pollbus.cchat.api.IChannelEvents;
 import pollbus.cchat.pub.ChannelDt;
@@ -41,6 +48,7 @@ public class CChatSessionFacadeBean implements IChatSession {
 	
 	@SessionId
 	private String _sessionId;
+	
 	private IPollbusSession _pollbusSession;
 	
 	private ChatSessionEventsCallback _sessionCallback;
@@ -68,6 +76,11 @@ public class CChatSessionFacadeBean implements IChatSession {
 				  + "\tuser: \t"  +  x.getUser() + "\n"))
 		);
 		logger.info("#onActive!");
+	}
+	
+	@OnDestroy
+	public void shutDown(){
+		// TODO: leave all channels ...this.
 	}
 	
 	/** http://localhost:8086/s/pod/chat-session?m=login&p0=don&p1=don */
@@ -220,14 +233,14 @@ public class CChatSessionFacadeBean implements IChatSession {
 		}
 		
 		void subscribe() {
+			logger.info("subscribing session {} to channel: {}", _sessionId, _channelId);
 			_cancel = _serviceRef.subscribe(this);
 		}
 		
-		void unsubscribe(){
-			logger.info("unsubscribing {} from {}", _sessionId, _channelId);
+		void unsubscribe() {
+			logger.info("unsubscribing {} from channel: {}", _sessionId, _channelId);
 			_cancel.cancel();
 		}
-		
 	}
 }
 	

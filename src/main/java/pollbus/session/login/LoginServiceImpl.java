@@ -7,7 +7,7 @@ import io.baratine.core.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pollbus.base.jamp.AppException;
+import pollbus.base.AppException;
 import pollbus.session.impl.SessionState;
 
 /**

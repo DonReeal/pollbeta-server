@@ -113,14 +113,13 @@ app.controller('chatController', ['$scope', function($scope) {
 				_this.owner = channelData.owner;
 			});
 		}
-
 	}
 
 
 	$scope.onJoinChannel = function(channel) {
 		console.log("IN: joined Channel!" + JSON.stringify(channel));
 		console.log("applying some functions!");
-		var chDt = channel; // JSON.eval(channel);
+		// JSON.eval(channel);
 		var ch = new Chat.Channel($scope.chatService, channel);
 		console.log("NOW:" + JSON.stringify(ch));
 		$scope.$apply(function() {
@@ -128,11 +127,16 @@ app.controller('chatController', ['$scope', function($scope) {
 		});
 
 	}
+	$scope.onJoinChannel.onfail = function(error) {
+		console.log(error);
+		alert("Error joining channel - are logged in already?");
+	}
 
 	$scope.leaveChannel = function() {
 		console.log("Leave channel: " + $scope.channelId)
 		$scope.chatService.query("/chat-session", "leaveChannel", [$scope.channelId], $scope.onLeaveChannel);
 	}
+
 	$scope.onLeaveChannel = function(success) {
 		console.log("leaveChannel:" + success);
 		$scope.$apply(function() {
@@ -143,6 +147,7 @@ app.controller('chatController', ['$scope', function($scope) {
 	// <!-- SERVICE CONNECTION -->
 	var url = "ws://" + "localhost:8086/" + "s/pod";
 	$scope.chatService = new Jamp.BaratineClient(url);
+	
 	var chatEvents = $scope.chatService.createListener();
 	console.log("CREATED LISTENER: " + JSON.stringify(chatEvents));
 
@@ -169,7 +174,7 @@ app.controller('chatController', ['$scope', function($scope) {
 			$scope.channels[channelId].onUpdate(channelData);
 		}
 	}
-	
+		
 	chatEvents.onClose = function (channelId) {
 		$scope.handleChannelClose(channelId);
 	}

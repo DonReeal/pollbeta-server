@@ -11,7 +11,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pollbus.base.jamp.AppException;
+import pollbus.base.AppException;
 import pollbus.base.jamp.Ok;
 import pollbus.session.api.IPollbusSession;
 import pollbus.session.api.SessionStatusDt;
@@ -23,7 +23,7 @@ public class PollbusSessionImpl implements IPollbusSession {
 	
 	private final String _sessionKey;
 	
-	public PollbusSessionImpl(String sessionKey, ILoginService loginService)			{
+	public PollbusSessionImpl(String sessionKey, ILoginService loginService) {
 		_sessionKey = sessionKey;
 		_userName = "annonymousUser{"+ _sessionKey +"}";
 		_loginService = loginService;
